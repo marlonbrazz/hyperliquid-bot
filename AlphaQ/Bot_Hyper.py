@@ -1,6 +1,6 @@
 import os
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 import requests
 from Bot_Hyper_executor import (
@@ -144,7 +144,7 @@ def get_current_slot(timeframe, now=None):
     # Define o último marco das 19:00
     anchor = now.replace(hour=19, minute=0, second=0, microsecond=0)
     if now < anchor:
-        anchor = anchor.replace(day=anchor.day - 1)
+        anchor = anchor - timedelta(days=1)
 
     # minutos desde o marco
     elapsed_minutes = int((now - anchor).total_seconds() // 60)
@@ -164,7 +164,7 @@ def should_check_api(timeframe):
     # Marco base das 19:00
     anchor = now.replace(hour=19, minute=0, second=0, microsecond=0)
     if now < anchor:
-        anchor = anchor.replace(day=anchor.day - 1)
+        anchor = anchor - timedelta(days=1)
 
     # minutos totais desde o anchor
     elapsed_minutes = int((now - anchor).total_seconds() // 60)
