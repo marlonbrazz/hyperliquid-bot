@@ -1,6 +1,7 @@
 import os
 import time
-from datetime import datetime
+from zoneinfo import ZoneInfo
+from datetime import datetime, timedelta
 import requests
 from Bot_Hyper_executor import (
     get_balance,
@@ -121,6 +122,8 @@ def get_entry_delay_minutes(timeframe: str):
 # =====================================================
 # TIME CONTROL
 # =====================================================
+BRASIL = ZoneInfo("America/Sao_Paulo")
+
 last_api_check = None
 force_api_check = True
 
@@ -135,13 +138,13 @@ def timeframe_to_minutes(tf: str):
     return mapping.get(tf, 60)
 
 def get_current_slot(timeframe, now=None):
-    now = now or datetime.now()
+    now = now or datetime.now(BRASIL)
     tf_minutes = timeframe_to_minutes(timeframe)
 
     # Define o último marco das 19:00
     anchor = now.replace(hour=19, minute=0, second=0, microsecond=0)
     if now < anchor:
-        anchor = anchor.replace(day=anchor.day - 1)
+        anchor = anchor - timedelta(days=1)
 
     # minutos desde o marco
     elapsed_minutes = int((now - anchor).total_seconds() // 60)
@@ -154,14 +157,14 @@ def get_current_slot(timeframe, now=None):
 def should_check_api(timeframe):
     global last_api_check, force_api_check
 
-    now = datetime.now()
+    now = datetime.now(BRASIL)
     tf_minutes = timeframe_to_minutes(timeframe)
     entry_delay = get_entry_delay_minutes(timeframe)
 
     # Marco base das 19:00
     anchor = now.replace(hour=19, minute=0, second=0, microsecond=0)
     if now < anchor:
-        anchor = anchor.replace(day=anchor.day - 1)
+        anchor = anchor - timedelta(days=1)
 
     # minutos totais desde o anchor
     elapsed_minutes = int((now - anchor).total_seconds() // 60)
@@ -404,14 +407,14 @@ def run_trading(symbols, timeframe="4h", alavancagem = 1,  risk_factor = 0.9):
                 if state is not None:
                     close_position(hl_symbol)
                     position_state[api_symbol] = None
-                    print(f"{api_symbol}: ⚪ NEUTRO | posição encerrada.")
+                    print(f"⚪ {api_symbol}:  NEUTRO | posição encerrada.")
                        
 # ==============================
 # EXECUÇÃO
 # ==============================
 if __name__ == "__main__":
-    ativos = ["SOLUSDT", "ETHUSDT", "BTCUSDT", "XRPUSDT"]
-    alavancagem = (2)
+    ativos = ["POLUSDT", "XLMUSDT", "PAXGUSDT", "XRPUSDT"]
+    alavancagem = (3)
     risk_factor = (0.95)
     timeframe = "4h"
         

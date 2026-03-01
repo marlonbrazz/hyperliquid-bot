@@ -1,6 +1,7 @@
 import os
 import time
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import requests
 from Bot_Hyper_executor import (
     get_balance,
@@ -121,6 +122,8 @@ def get_entry_delay_minutes(timeframe: str):
 # =====================================================
 # TIME CONTROL
 # =====================================================
+BRASIL = ZoneInfo("America/Sao_Paulo")
+
 last_api_check = None
 force_api_check = True
 
@@ -135,7 +138,7 @@ def timeframe_to_minutes(tf: str):
     return mapping.get(tf, 60)
 
 def get_current_slot(timeframe, now=None):
-    now = now or datetime.now()
+    now = now or datetime.now(BRASIL)
     tf_minutes = timeframe_to_minutes(timeframe)
 
     # Define o último marco das 19:00
@@ -154,7 +157,7 @@ def get_current_slot(timeframe, now=None):
 def should_check_api(timeframe):
     global last_api_check, force_api_check
 
-    now = datetime.now()
+    now = datetime.now(BRASIL)
     tf_minutes = timeframe_to_minutes(timeframe)
     entry_delay = get_entry_delay_minutes(timeframe)
 

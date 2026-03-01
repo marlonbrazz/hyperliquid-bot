@@ -6,6 +6,7 @@ symbol_map = {
     "ETHUSDT": "ETH",
     "SOLUSDT": "SOL",
     "ZECUSDT": "ZEC",
+    "PAXGUSDT": "PAXG",
    
     "XRPUSDT": "XRP",
     "XLMUSDT": "XLM",
@@ -20,5 +21,6 @@ PRICE_DECIMALS = {
     "XRP": 4,
     "XLM": 5,
     "POL": 5,
+    "PAXG": 1
     # Adicione os outros ativos que operar
 }
